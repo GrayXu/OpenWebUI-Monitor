@@ -51,6 +51,7 @@ class Filter:
         show_cost: bool = Field(default=True, description="show cost")
         show_balance: bool = Field(default=True, description="show balance")
         show_tokens: bool = Field(default=True, description="show tokens")
+        check_balance: bool = Field(default=False, description="check balance before request?")
 
     def __init__(self):
         self.type = "filter"
@@ -86,6 +87,10 @@ class Filter:
         __user__ = __user__ or {}
         __metadata__ = __metadata__ or {}
         self.start_time = time.time()
+        
+        if not self.valves.check_balance:  # no balance check
+            return body
+        
         user_id = __user__.get("id", "default")
 
         user_dict = self._prepare_user_dict(__user__)  # 预处理 __user__
